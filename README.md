@@ -13,3 +13,10 @@ DynamoDB (Trigger) → Lambda → Step Functions → Cross-Account Processing �
 - Step Functions: Orchestration with error handling
 - KMS: Customer-managed encryption keys
 - CloudWatch: Monitoring and alarms
+
+## Lambda Functions
+
+- Stream processor (triggers on DynamoDB)
+- Cross-account role assumption
+- CUR data processing and transformation
+- Notification handling (Lambda + Email)

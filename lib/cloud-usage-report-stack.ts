@@ -19,7 +19,6 @@ export class CloudUsageReportStack extends Stack {
 	constructor(scope: Construct, id: string, props: CloudUsageReportStackProps) {
 		super(scope, id, props);
 
-		// TODO: why AWS customer managed key and not AWS managed key ?
 		const encryptionKey = this.createEncryptionKey(props);
 		const curTable = this.createDdbTable(encryptionKey, props);
 		const processedBucket = this.createCURBucket(encryptionKey);
