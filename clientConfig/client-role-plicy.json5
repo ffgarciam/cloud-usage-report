@@ -1,0 +1,29 @@
+// client-role-policy.json - IAM policy for client role
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowReadCURBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:ListBucket",
+        "s3:GetBucketLocation",
+        "s3:GetBucketVersioning"
+      ],
+      "Resource": [
+        "arn:aws:s3:::YOUR-CUR-BUCKET-NAME",
+        "arn:aws:s3:::YOUR-CUR-BUCKET-NAME/*"
+      ]
+    },
+    {
+      "Sid": "AllowReadCURReportDefinition",
+      "Effect": "Allow",
+      "Action": [
+        "cur:DescribeReportDefinitions"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

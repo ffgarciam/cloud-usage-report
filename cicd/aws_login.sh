@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+echo "Getting Credentials."
+export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \
+    $(aws sts assume-role-with-web-identity --role-arn ${ROLE_ARN} \
+    --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}" \
+      --web-identity-token $CI_JOB_JWT_V2 \
+      --duration-seconds 3600 \
+      --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+      --output text))
+
+echo "Waiting for credentials to activate..."
+until aws sts get-caller-identity; do
+    sleep 1
+done
+echo "Credentials are ready"

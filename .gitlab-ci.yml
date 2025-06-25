@@ -1,0 +1,56 @@
+image: amazon/aws-cli
+
+stages:
+  - build
+  - dry-run
+  - deploy
+
+before_script:
+  - |
+    echo "== ROLE_ARN: ${ROLE_ARN}"
+    source ./cicd/aws_login.sh
+
+.build:
+  stage: build
+  script:
+    - npm ci
+    - npm run eslint
+    - npm run build
+  only:
+    - main
+
+build_development:
+  stage: build
+  extends: .build
+  environment:
+    name: development
+
+dryrun_development:
+  stage: dry-run
+  environment:
+    name: development
+  id_tokens:
+    CI_JOB_JWT_V2:
+      aud: https://gitlab.com
+  only:
+    - branches
+  except:
+    - tags
+  script:
+    - npx cdk diff
+
+deploy_development:
+  stage: deploy
+  environment:
+    name: development
+  id_tokens:
+    CI_JOB_JWT_V2:
+      aud: https://gitlab.com
+  when: manual
+  allow_failure: false
+  only:
+    - branches
+  except:
+    - tags
+  script:
+    - npx cdk deploy --require-approval=never "*"

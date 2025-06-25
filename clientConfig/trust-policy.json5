@@ -1,0 +1,22 @@
+// trust-policy.json - IAM trust policy for client accounts
+// aws iam create-role --role-name CURProcessorCrossAccountRole \
+//   --assume-role-policy-document file://trust-policy.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::YOUR-PROCESSOR-ACCOUNT-ID:root"
+      },
+      "Action": "sts:AssumeRole",
+      "Condition": {
+        "StringEquals": {
+          "sts:ExternalId": "YOUR-UNIQUE-EXTERNAL-ID"
+        }
+      }
+    }
+  ]
+}
+
+

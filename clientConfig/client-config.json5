@@ -1,0 +1,30 @@
+// client-config.example.json - Example client configuration
+{
+  "clientId": {
+    "S": "client-001"
+  },
+  "accountId": {
+    "S": "123456789012"
+  },
+  "roleArn": {
+    "S": "arn:aws:iam::123456789012:role/CURProcessorCrossAccountRole"
+  },
+  "externalId": {
+    "S": "unique-external-id-here"
+  },
+  "curBucketName": {
+    "S": "client-cur-bucket-name"
+  },
+  "curPrefix": {
+    "S": "cur-reports/"
+  },
+  "notificationEmail": {
+    "S": "client-notifications@example.com"
+  },
+  "processingFrequency": {
+    "S": "DAILY"
+  },
+  "createdAt": {
+    "S": "2024-01-15T10:00:00Z"
+  }
+}
