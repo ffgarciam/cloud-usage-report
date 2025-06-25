@@ -7,6 +7,7 @@ import { ITable } from "aws-cdk-lib/aws-dynamodb";
 import { LambdaInvoke, SnsPublish } from "aws-cdk-lib/aws-stepfunctions-tasks";
 import { IStateMachine, LogLevel, Parallel, StateMachine, StateMachineType, TaskInput } from "aws-cdk-lib/aws-stepfunctions";
 import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
+import { IFunction } from "aws-cdk-lib/aws-lambda";
 
 export interface CurWorkflowProps {
     environment: string;
@@ -26,6 +27,8 @@ export interface WorkflowTasks {
 
 export class CurWorkflow extends Construct {
     readonly processingStateMachine: IStateMachine;
+    readonly streamProcessorLambda: IFunction;
+    readonly processCurLambda: IFunction; 
 
     constructor(scope: Construct, id: string, props: CurWorkflowProps) {
         super(scope, id);
@@ -41,6 +44,8 @@ export class CurWorkflow extends Construct {
 
         const workflowTasks = this.createWorkflowTasks(lambdas, props);
         this.processingStateMachine = this.createStateMachine(workflowTasks, props, lambdas);
+        this.streamProcessorLambda = lambdas.streamProcessorLambda;
+        this.processCurLambda = lambdas.processCurLambda;
     }
 
     private createWorkflowTasks(lambdas: LambdasConstruct, props: CurWorkflowProps): WorkflowTasks {

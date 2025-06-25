@@ -6,6 +6,7 @@ import { ITopic, Topic } from 'aws-cdk-lib/aws-sns';
 import { EmailSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Construct } from 'constructs';
 import { CurWorkflow } from './cur-workflow-construct';
+import { CurDashboardLogs } from './cur-dashboard-logs';
 
 
 export interface CloudUsageReportStackProps extends StackProps {
@@ -24,7 +25,7 @@ export class CloudUsageReportStack extends Stack {
 		const processedBucket = this.createCURBucket(encryptionKey);
 		const topic = this.createSnsTopic(encryptionKey, props);
 		
-		new CurWorkflow(this, 'CurWorkflow', {
+		const curWorkflow = new CurWorkflow(this, 'CurWorkflow', {
 			environment: props.environment,
 			clientConfigTable: curTable,
 			curBucket: processedBucket,
@@ -32,6 +33,13 @@ export class CloudUsageReportStack extends Stack {
 			encryptionKey,
 			notificationLambdaArn: props.notificationLambdaArn
 		});	
+
+		new CurDashboardLogs(this, 'CurDashboardLogs', {
+			environment: props.environment,
+			streamProcessorLambda: curWorkflow.streamProcessorLambda,
+			processCurLambda: curWorkflow.processCurLambda,
+			processingStateMachine: curWorkflow.processingStateMachine
+		})
 	}
 
 	private createEncryptionKey(props: CloudUsageReportStackProps): IKey {
